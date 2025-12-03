@@ -18,6 +18,9 @@ inputs:
     description: True/False if this is development environment.
     default: false
 
+env:
+  ENDING_TAG: ${{ inputs.development && '-dev' }}
+
 runs:
   using: composite
   steps:
@@ -25,7 +28,6 @@ runs:
       id: meta
       run: |
         echo DATE_RELEASE=$(echo "`date +'%Y.%m.%d'`") >> $GITHUB_OUTPUT
-        echo ENDING_TAG=${{ development && '-dev' || '' }}
 
     - name: Pipeline Success
       if: inputs.success
@@ -35,7 +37,7 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ✅ Built & Pushed ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ steps.meta.outputs.IMAGE_TAG_ENDING }} app!
+        message: ✅ Built & Pushed ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ env.ENDING_TAG }} app!
 
     - name: Pipeline Failure
       if: ${{ !inputs.success }}
@@ -45,4 +47,4 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ❌ Unable to build & push ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ steps.meta.outputs.IMAGE_TAG_ENDING }} app.
+        message: ❌ Unable to build & push ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ env.ENDING_TAG }} app.

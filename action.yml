@@ -8,22 +8,25 @@ inputs:
   repo_name: 
     description: Name of the repo that the pipeline is running for.
     required: true
-  image_tag_ending: 
-    description: Ending extension for tag name.
-    required: true
-  date_release: 
-    description: Date that the image was tagged with.
-    required: true
   pushover_user:
     description: User key for Pushover notification system.
     required: true
   pushover_token:
     description: App token for Pushover notification system.
     required: true
+  development:
+    description: True/False if this is development environment.
+    default: false
 
 runs:
   using: composite
   steps:
+    - name: Get Meta
+      id: meta
+      run: |
+        echo DATE_RELEASE=$(echo "`date +'%Y.%m.%d'`") >> $GITHUB_OUTPUT
+        echo ENDING_TAG=${{ development && '-dev' || '' }}
+
     - name: Pipeline Success
       if: inputs.success
       uses: umahmood/pushover-actions@main
@@ -32,7 +35,7 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ✅ Built & Pushed ${{ inputs.repo_name }}:${{ inputs.date_release }}${{ inputs.image_tag_ending }} app!
+        message: ✅ Built & Pushed ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ steps.meta.outputs.IMAGE_TAG_ENDING }} app!
 
     - name: Pipeline Failure
       if: ${{ !inputs.success }}
@@ -42,4 +45,4 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ❌ Unable to build & push ${{ inputs.repo_name }}:${{ inputs.date_release }}${{ inputs.image_tag_ending }} app.
+        message: ❌ Unable to build & push ${{ inputs.repo_name }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ steps.meta.outputs.IMAGE_TAG_ENDING }} app.

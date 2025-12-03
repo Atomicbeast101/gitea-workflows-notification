@@ -1,0 +1,45 @@
+name: Report
+description: Sends a Pushover notification to user based on status of pipeline run.
+
+inputs:
+  success:
+    description: True/False if success run.
+    required: true
+  repo_name: 
+    description: Name of the repo that the pipeline is running for.
+    required: true
+  image_tag_ending: 
+    description: Ending extension for tag name.
+    required: true
+  date_release: 
+    description: Date that the image was tagged with.
+    required: true
+  pushover_user:
+    description: User key for Pushover notification system.
+    required: true
+  pushover_token:
+    description: App token for Pushover notification system.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Pipeline Success
+      if: inputs.success
+      uses: umahmood/pushover-actions@main
+      env:
+        PUSHOVER_USER: ${{ inputs.pushover_user }}
+        PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
+      with:
+        title: Gitea DevOps
+        message: ✅ Built & Pushed ${{ inputs.repo_name }}:${{ inputs.date_release }}${{ inputs.image_tag_ending }} app!
+
+    - name: Pipeline Failure
+      if: ${{ !inputs.success }}
+      uses: umahmood/pushover-actions@main
+      env:
+        PUSHOVER_USER: ${{ inputs.pushover_user }}
+        PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
+      with:
+        title: Gitea DevOps
+        message: ❌ Unable to build & push ${{ inputs.repo_name }}:${{ inputs.date_release }}${{ inputs.image_tag_ending }} app.

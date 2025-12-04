@@ -38,7 +38,7 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ✅ ${{ built_pushed && 'Built/Pushed' }}${{ tested && "/Tested" }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app!
+        message: ✅ ${{ inputs.built_pushed && 'Built/Pushed' }}${{ inputs.tested && "/Tested" }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app!
 
     - name: Pipeline Failure
       if: ${{ !inputs.success }}
@@ -48,4 +48,4 @@ runs:
         PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
       with:
         title: Gitea DevOps
-        message: ❌ Unable to ${{ built_pushed && 'build/push' }}${{ tested && "/test" }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app.
+        message: ❌ Unable to ${{ inputs.built_pushed && 'build/push' }}${{ inputs.tested && "/test" }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app.

@@ -19,12 +19,14 @@ runs:
   using: composite
   steps:
     - name: Get Meta
+      continue-on-error: true
       id: meta
       run: |
         echo REPO_NAME=$(echo "${GITHUB_REPOSITORY##*/}") >> $GITHUB_OUTPUT
         echo DATE_RELEASE=$(echo "`date +'%Y.%m.%d'`") >> $GITHUB_OUTPUT
 
     - name: Pipeline Success
+      continue-on-error: true
       if: inputs.success
       uses: umahmood/pushover-actions@main
       env:
@@ -35,6 +37,7 @@ runs:
         message: ✅ Built & Pushed ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app!
 
     - name: Pipeline Failure
+      continue-on-error: true
       if: ${{ !inputs.success }}
       uses: umahmood/pushover-actions@main
       env:

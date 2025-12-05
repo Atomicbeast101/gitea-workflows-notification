@@ -29,7 +29,7 @@ runs:
 
     - name: Pipeline Success
       if: ${{ inputs.success == 'true' }}
-      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@dev
+      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@main
       with:
         user: ${{ inputs.pushover_user }}
         token: ${{ inputs.pushover_token }}
@@ -38,7 +38,7 @@ runs:
 
     - name: Pipeline Failure
       if: ${{ inputs.success == 'false' }}
-      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@dev
+      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@main
       with:
         user: ${{ inputs.pushover_user }}
         token: ${{ inputs.pushover_token }}

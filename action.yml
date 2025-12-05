@@ -29,20 +29,18 @@ runs:
 
     - name: Pipeline Success
       if: ${{ inputs.success == 'true' }}
-      uses: umahmood/pushover-actions@main
-      env:
-        PUSHOVER_USER: ${{ inputs.pushover_user }}
-        PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
+      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@main
       with:
+        user: ${{ inputs.pushover_user }}
+        token: ${{ inputs.pushover_token }}
         title: Gitea DevOps
         message: ✅ Built/Pushed${{ inputs.tested == 'true' && '/Tested' || '' }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app!
 
     - name: Pipeline Failure
       if: ${{ inputs.success == 'false' }}
-      uses: umahmood/pushover-actions@main
-      env:
-        PUSHOVER_USER: ${{ inputs.pushover_user }}
-        PUSHOVER_TOKEN: ${{ inputs.pushover_token }}
+      uses: https://${{ vars.LOCAL_ACR_URL }}/${{ vars.LOCAL_ACR_USERNAME }}/gitea-workflows-pushover@main
       with:
+        user: ${{ inputs.pushover_user }}
+        token: ${{ inputs.pushover_token }}
         title: Gitea DevOps
         message: ❌ Unable to build/push${{ inputs.tested == 'true' && '/test' || '' }} ${{ steps.meta.outputs.REPO_NAME }}:${{ steps.meta.outputs.DATE_RELEASE }}${{ inputs.development && '-dev' || '' }} app.
